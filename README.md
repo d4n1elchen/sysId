@@ -11,4 +11,4 @@ Use continuous and discrete state space model to solve a spring-mass system
 
 HW3
 ---
-Analyze impulse response using fft
+Use Markov Parameters to obtain pulse response and analyze pulse response using fft.

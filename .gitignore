@@ -206,3 +206,6 @@ auto/
 
 # Windows files
 Thumbs.db
+
+# Matlab
+*.asv

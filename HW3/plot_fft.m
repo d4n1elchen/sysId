@@ -1,5 +1,5 @@
 function plot_fft(signal, Fs)
-    L = size(signal,1);
+    L = length(signal);
     Y = abs(fft(signal));
     P = Y(1:L/2+1);
     f = Fs*(0:(L/2))/L * (2*pi);

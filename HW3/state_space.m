@@ -31,7 +31,8 @@ sys_ss = ss(A,B,C,D);
 
 I = eye(2);
 Ts = 1/Fs;
-Ad = I + A*Ts + A^2*Ts^2/2 + A^3*Ts^3/6; % Ordered 3
+Ad = exp_expand(A,Ts,100);
+Ad_ = (exp(1))^(A*Ts);
 Bd = A^-1*(Ad-I)*B;
 Cd = C;
 Dd = D;
@@ -51,26 +52,34 @@ y_tf  = lsim(sys_tf,  u, t);
 y_ss  = lsim(sys_ss,  u, t);
 y_ssd = lsim(sys_ssd, u, t);
 
+%% Markov params
+y_markov = markov_params(Ad,Bd,Cd,Dd,size(t));
+
 %% Plot result
 
 figure(1);
 
-subplot(4, 1, 1);
+subplot(5, 1, 1);
 plot(t, u);
 title('Input signal');
 grid;
 
-subplot(4, 1, 2);
+subplot(5, 1, 2);
 plot(t, y_ss);
 title('Continuous-time state space model');
 grid;
 
-subplot(4, 1, 3);
+subplot(5, 1, 3);
 plot(t, y_ssd);
 title('Discrete-time state space model');
 grid;
 
-subplot(4, 1, 4);
-plot_fft(y_ss, Fs);
+subplot(5, 1, 4);
+plot(t, y_markov);
+title('Markov parameters');
+grid;
+
+subplot(5, 1, 5);
+plot_fft(y_markov, Fs);
 title('FFT');
 grid;
