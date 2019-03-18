@@ -61,25 +61,16 @@ title('Input signal');
 grid;
 
 subplot(4, 1, 2);
-plot(t, y_tf);
-title('Transfer function');
-grid;
-
-subplot(4, 1, 3);
 plot(t, y_ss);
 title('Continuous-time state space model');
 grid;
 
-subplot(4, 1, 4);
+subplot(4, 1, 3);
 plot(t, y_ssd);
 title('Discrete-time state space model');
 grid;
 
-e_c_d = abs(y_ss-y_ssd);
-e_tf_c = abs(y_tf-y_ss);
-e_tf_d = abs(y_tf-y_ssd);
-
-subplot(5, 1, 5);
-plot(t, e_c_d);
-title('Error');
+subplot(4, 1, 4);
+plot_fft(y_ss, Fs);
+title('FFT');
 grid;
