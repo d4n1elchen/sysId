@@ -14,21 +14,21 @@ title('Continuous-time state space model');
 grid;
 
 subplot(rr, cc, 3);
-plot(t, y_ssd);
-title('Discrete-time state space model');
-grid;
-
-subplot(rr, cc, 4);
 plot(t, y_markov);
 title('Markov parameters');
 grid;
 
-subplot(rr, cc, 5);
+subplot(rr, cc, 4);
 plot(t, y_frf);
 title('FRF');
 grid;
 
+subplot(rr, cc, 5);
+plot(t, y_markov-y_frf);
+title('Error between Markov and FRF');
+grid;
+
 subplot(rr, cc, 6);
 plot(t, y_markov_era);
-title('Simulation of ERA result');
+title('Markov of ERA result');
 grid;

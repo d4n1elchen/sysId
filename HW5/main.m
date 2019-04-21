@@ -6,6 +6,7 @@ k = 0.5;
 F = 1;
 
 wn = sqrt(k/m);
+rho = b/(2*m*wn);
 Fs = 1000;
 Ts = 1/Fs;
 
@@ -99,7 +100,7 @@ r = real(Lv_c(1));
 theta = imag(Lv_c(1));
 
 wn_est = sqrt(theta^2 + r^2);
-b_est = -2*r*m;
+rho_est = -r*wn_est;
 
 %% Plot
 plot_results;
