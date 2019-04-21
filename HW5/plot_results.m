@@ -29,6 +29,6 @@ title('FRF');
 grid;
 
 subplot(rr, cc, 6);
-plot(t, y_era);
+plot(t, y_markov_era);
 title('Simulation of ERA result');
 grid;
