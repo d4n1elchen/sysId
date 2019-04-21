@@ -1,17 +1,16 @@
 clear; clc;
 
 m = 0.5;
-b = 0.005;
+b = 0.02;
 k = 0.5;
 F = 1;
 
 wn = sqrt(k/m);
 rho = b/(2*m*wn);
-Fs = 1000;
+Fs = 100;
 Ts = 1/Fs;
 
 %% State space model
-
 A = [0 1; -k/m -b/m];
 B = [0 1/m]';
 C = [1 0];
@@ -20,7 +19,6 @@ D = [0];
 sys_ss = ss(A,B,C,D);
 
 %% Discrete-time state space model
-
 I = eye(2);
 Ad = exp_expand(A,Ts,100);
 Ad_ = (exp(1))^(A*Ts);
@@ -55,7 +53,7 @@ N = 10;
 frf_sum = 0;
 for i=1:N
     u_rand = [(rand(t_size_fh)-0.5)*F zeros(t_size_lh)];
-    y_rand  = lsim(sys_ss, u_rand, t);
+    y_rand  = lsim(sys_ssd, u_rand, t);
     if(i==1)
         frf_sum = fft(y_rand')./fft(u_rand);
     else
@@ -67,8 +65,8 @@ y_frf = ifft(frf_avg);
 
 %% ERA
 % Estimate order
-H0 = get_hankel(y_markov, 10, 10);
-H1 = get_hankel(y_markov, 10, 10, true);
+H0 = get_hankel(y_frf, 10, 10);
+H1 = get_hankel(y_frf, 10, 10, true);
 [P,S,Q] = svd(H0);
 Sv = diag(S);
 Sv = Sv/Sv(1);
@@ -84,7 +82,7 @@ SQ = S^(1/2)*Q';
 C_era = PS(1,:);
 B_era = SQ(:,1);
 A_era = (S^(-1/2)*P')*H1*(Q*S^(-1/2));
-y_markov_era = markov_params(A_era,B_era,C_era,D,size(t));
+y_markov_era = markov_params(A_era,B_era,C_era,Dd,size(t));
 
 %% ERA Simulation
 sys_era = ss(A_era,B_era,C_era,D,Ts);
