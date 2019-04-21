@@ -1,4 +1,4 @@
-rr = 5; cc = 1;
+rr = 6; cc = 1;
 
 %% Plot result
 figure(1);
@@ -24,6 +24,11 @@ title('Markov parameters');
 grid;
 
 subplot(rr, cc, 5);
+plot(t, y_frf);
+title('FRF');
+grid;
+
+subplot(rr, cc, 6);
 plot(t, y_era);
 title('Simulation of ERA result');
 grid;

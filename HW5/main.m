@@ -49,9 +49,24 @@ y_ssd = lsim(sys_ssd, u, t);
 %% Markov params
 y_markov = markov_params(Ad,Bd,Cd,Dd,size(t));
 
+%% FRF
+N = 10;
+frf_sum = 0;
+for i=1:N
+    u_rand = [(rand(t_size_fh)-0.5)*F zeros(t_size_lh)];
+    y_ss  = lsim(sys_ss, u_rand, t);
+    if(i==1)
+        frf_sum = fft(y_ss)./fft(u_rand');
+    else
+        frf_sum = frf_sum + fft(y_ss)./fft(u_rand');
+    end
+end
+frf_avg = frf_sum / N;
+y_frf = ifft(frf_avg);
+
 %% ERA
 % Estimate order
-H0 = get_hankel(y_markov, 10, 10);
+H0 = get_hankel(y_frf, 10, 10);
 [~,S,~] = svd(H0);
 Sv = diag(S);
 Sv = Sv/Sv(1);
