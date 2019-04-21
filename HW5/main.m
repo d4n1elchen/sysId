@@ -1,13 +1,13 @@
 clear; clc;
 
 m = 0.5;
-b = 0.02;
+rho = 0.005;
 k = 0.5;
 F = 1;
 
 wn = sqrt(k/m);
-rho = b/(2*m*wn);
-Fs = 100;
+b = 2*rho*m*wn;
+Fs = 1000;
 Ts = 1/Fs;
 
 %% State space model
