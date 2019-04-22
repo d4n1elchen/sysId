@@ -33,13 +33,13 @@ t_end = 1000;
 t = linspace(0, t_end, t_end*Fs + 1);
 t_size = size(t);
 t_size_fh = [1 ceil(t_size(2)/2)];
-t_size_lh = [1 ceil(t_size(2)/2)-1];
+t_size_lh = [1 t_size(2) - t_size_fh(2)];
 
 f_sin = 100;
 u_sin =  [sin(t(1:t_size_fh(2))*f_sin)*F zeros(t_size_lh)];
 u_step = [ones(t_size_fh)*F zeros(t_size_lh)];
 u_impulse = zeros(t_size); u_impulse(1) = F;
-u_rand = [(rand(t_size_fh)-0.5)*F zeros(t_size_lh)];
+u_rand = [idinput(t_size_fh)*F zeros(t_size_lh)];
 
 u = u_rand;
 y_ss  = lsim(sys_ss, u, t);
@@ -53,7 +53,7 @@ N = 10;
 frf_sum = 0;
 for i=1:N
     u_rand = [(rand(t_size_fh)-0.5)*F zeros(t_size_lh)];
-    y_rand  = lsim(sys_ssd, u_rand, t);
+    y_rand = lsim(sys_ss, u_rand, t);
     if(i==1)
         frf_sum = fft(y_rand')./fft(u_rand);
     else
@@ -65,8 +65,8 @@ y_frf = ifft(frf_avg);
 
 %% ERA
 % Estimate order
-H0 = get_hankel(y_frf, 10, 10);
-H1 = get_hankel(y_frf, 10, 10, true);
+H0 = get_hankel(y_frf, 100, 1000);
+H1 = get_hankel(y_frf, 100, 1000, true);
 [P,S,Q] = svd(H0);
 Sv = diag(S);
 Sv = Sv/Sv(1);
@@ -85,7 +85,7 @@ A_era = (S^(-1/2)*P')*H1*(Q*S^(-1/2));
 y_markov_era = markov_params(A_era,B_era,C_era,Dd,size(t));
 
 %% ERA Simulation
-sys_era = ss(A_era,B_era,C_era,D,Ts);
+sys_era = ss(A_era,B_era,C_era,Dd,Ts);
 y_era = lsim(sys_era,u,t);
 
 %% Eigenvalue of A_era
@@ -98,7 +98,7 @@ r = real(Lv_c(1));
 theta = imag(Lv_c(1));
 
 wn_est = sqrt(theta^2 + r^2);
-rho_est = -r*wn_est;
+rho_est = -r/wn_est;
 
 %% Plot
 plot_results;
