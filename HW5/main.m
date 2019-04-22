@@ -65,8 +65,8 @@ y_frf = ifft(frf_avg);
 
 %% ERA
 % Estimate order
-H0 = get_hankel(y_frf, 100, 1000);
-H1 = get_hankel(y_frf, 100, 1000, true);
+H0 = get_hankel(y_frf, 1000, 10000);
+H1 = get_hankel(y_frf, 1000, 10000, true);
 [P,S,Q] = svd(H0);
 Sv = diag(S);
 Sv = Sv/Sv(1);
@@ -99,6 +99,9 @@ theta = imag(Lv_c(1));
 
 wn_est = sqrt(theta^2 + r^2);
 rho_est = -r/wn_est;
+
+fprintf("Natural Freq : %.5f, Identified Natural Freq : %.5f\n",wn,wn_est);
+fprintf("Damping Ratio: %.5f, Identified Damping Ratio: %.5f\n",rho,rho_est);
 
 %% Plot
 plot_results;
